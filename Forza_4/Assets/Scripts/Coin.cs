@@ -21,7 +21,7 @@ public class Coin : MonoBehaviour
         //Debug.Log("OK");
         if (man.gameOver)
             return;
-        man.CheckMove(gameObject.name);
+        man.CheckMove(gameObject.name, man.PosInGrid(gameObject));
         man.busy = false;
     }
 }
