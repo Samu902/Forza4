@@ -20,11 +20,13 @@ public class Manager : MonoBehaviour
     private int turn;
     [HideInInspector]
     public bool busy;
+    public bool gameOver;
 
     void Start()
     {
         turn = 0;
         busy = false;
+        gameOver = false;
         grid = new SlotState[w, h];
     }
 
@@ -89,5 +91,136 @@ public class Manager : MonoBehaviour
             }
         }
         grid[index, y] = state;
+    }
+
+    public void CheckMove(string name)
+    {
+        int streak = 0;
+        //Verticale
+        for (int x = 0; x < w; x++)
+        {
+            for (int y = 0; y < h - 3; y++)
+            {
+                switch (grid[x, y])
+                {
+                    case SlotState.Empty:
+                        streak = 0;
+                        break;
+                    case SlotState.Red:
+                        streak = name.Contains("Red") ? streak + 1 : 0;
+                        break;
+                    case SlotState.Yellow:
+                        streak = name.Contains("Yellow") ? streak + 1 : 0;
+                        break;
+                }
+                if (streak >= 4)
+                {
+                    Win(name);
+                    gameOver = true;
+                    return;
+                }
+            }
+        }
+
+        //Se arrivi qui, significa che il verticale non ha trovato nulla
+        //Orizzontale
+        streak = 0;
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w - 3; x++)
+            {
+                switch (grid[x, y])
+                {
+                    case SlotState.Empty:
+                        streak = 0;
+                        break;
+                    case SlotState.Red:
+                        streak = name.Contains("Red") ? streak + 1 : 0;
+                        break;
+                    case SlotState.Yellow:
+                        streak = name.Contains("Yellow") ? streak + 1 : 0;
+                        break;
+                }
+                if (streak >= 4)
+                {
+                    Win(name);
+                    gameOver = true;
+                    return;
+                }
+            }
+        }
+
+        //Se arrivi qui, significa che il verticale e l'orizzontale non hanno trovato nulla
+        //Obliquo a destra
+        streak = 0;
+        for (int x = 0; x < w - 3; x++)
+        {
+            for (int y = 0; y < h - 3; y++)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    for (int j = 0; j < 4; j++)
+                    {
+                        switch (grid[x + i, y + j])
+                        {
+                            case SlotState.Empty:
+                                streak = 0;
+                                break;
+                            case SlotState.Red:
+                                streak = name.Contains("Red") ? streak + 1 : 0;
+                                break;
+                            case SlotState.Yellow:
+                                streak = name.Contains("Yellow") ? streak + 1 : 0;
+                                break;
+                        }
+                    }
+                }
+                if (streak >= 4)
+                {
+                    Win(name);
+                    gameOver = true;
+                    return;
+                }
+            }
+        }
+
+        //Se arrivi qui, significa che il verticale, l'orizzontale e l'obliquo a destra non hanno trovato nulla
+        //Obliquo a sinistra
+        streak = 0;
+        for (int x = 3; x < w; x++)
+        {
+            for (int y = 0; y < h - 3; y++)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    for (int j = 0; j < 4; j++)
+                    {
+                        switch (grid[x - i, y + j])
+                        {
+                            case SlotState.Empty:
+                                streak = 0;
+                                break;
+                            case SlotState.Red:
+                                streak = name.Contains("Red") ? streak + 1 : 0;
+                                break;
+                            case SlotState.Yellow:
+                                streak = name.Contains("Yellow") ? streak + 1 : 0;
+                                break;
+                        }
+                    }
+                }
+                if (streak >= 4)
+                {
+                    Win(name);
+                    gameOver = true;
+                    return;
+                }
+            }
+        }
+    }
+
+    private void Win(string name)
+    {
+        Debug.Log(name + " wins");
     }
 }
