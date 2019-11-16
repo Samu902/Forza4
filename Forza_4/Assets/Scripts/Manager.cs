@@ -48,6 +48,22 @@ public class Manager : MonoBehaviour
             GenerateCoin(6);
     }
 
+    private List<int> GenerateMask()
+    {
+        List<int> mask = new List<int>();
+        for (int i = 0; i < 7; i++)
+        {
+            int x;
+            do
+            {
+                x = Random.Range(0, 7);
+            }
+            while (mask.Contains(x));
+            mask[i] = x;
+        }
+        return mask;
+    }
+
     public void GenerateCoin(int index)
     {
         //Se la moneta non ha ancora finito di cadere, esci
