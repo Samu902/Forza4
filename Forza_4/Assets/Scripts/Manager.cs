@@ -152,62 +152,103 @@ public class Manager : MonoBehaviour
 
         //Se arrivi qui, significa che il verticale non ha trovato nulla
         //Orizzontale
-        streak = 1;
+        //streak = 1;
+        //for (int i = 1; i <= 3; i++)
+        //{
+        //    if (streak >= 4)
+        //        break;
+        //    try
+        //    {
+        //        if (grid[pos.x - i, pos.y] == SlotState.Empty)
+        //        {
+        //            break;
+        //        }
+        //        else if (grid[pos.x - i, pos.y] == SlotState.Red)
+        //        {
+        //            if (name.Contains("Red"))
+        //                streak++;
+        //            else
+        //                break;
+        //        }
+        //        else
+        //        {
+        //            if (name.Contains("Yellow"))
+        //                streak++;
+        //            else
+        //                break;
+        //        }
+        //    }
+        //    catch (System.IndexOutOfRangeException)
+        //    {
+        //        break;
+        //    }
+        //}
+        //for (int i = 1; i <= 3; i++)
+        //{
+        //    if (streak >= 4)
+        //        break;
+        //    try
+        //    {
+        //        if (grid[pos.x + i, pos.y] == SlotState.Empty)
+        //        {
+        //            break;
+        //        }
+        //        else if (grid[pos.x + i, pos.y] == SlotState.Red)
+        //        {
+        //            if (name.Contains("Red"))
+        //                streak++;
+        //            else
+        //                break;
+        //        }
+        //        else
+        //        {
+        //            if (name.Contains("Yellow"))
+        //                streak++;
+        //            else
+        //                break;
+        //        }
+        //    }
+        //    catch (System.IndexOutOfRangeException)
+        //    {
+        //        break;
+        //    }
+        //}
+        //if (streak >= 4)
+        //{
+        //    Win(name);
+        //    return;
+        //}
 
-        for (int i = 1; i <= 3; i++)
+        //Nuovo metodo più compatto
+        streak = 0;
+        for (int i = -3; i <= 3; i++)
         {
-            try
-            {
-                if (grid[pos.x - i, pos.y] == SlotState.Empty)
-                {
-                    break;
-                }
-                else if (grid[pos.x - i, pos.y] == SlotState.Red)
-                {
-                    if (name.Contains("Red"))
-                        streak++;
-                    else
-                        break;
-                }
-                else
-                {
-                    if (name.Contains("Yellow"))
-                        streak++;
-                    else
-                        break;
-                }
-            }
-            catch (System.IndexOutOfRangeException)
-            {
+            if (streak >= 4)
                 break;
-            }
-        }
-        for (int i = 1; i <= 3; i++)
-        {
             try
             {
                 if (grid[pos.x + i, pos.y] == SlotState.Empty)
                 {
-                    break;
+                    streak = 0;
                 }
                 else if (grid[pos.x + i, pos.y] == SlotState.Red)
                 {
                     if (name.Contains("Red"))
                         streak++;
                     else
-                        break;
+                        streak = 0;
                 }
                 else
                 {
                     if (name.Contains("Yellow"))
                         streak++;
                     else
-                        break;
+                        streak = 0;
                 }
             }
             catch (System.IndexOutOfRangeException)
             {
-                break;
+                streak = 0;
             }
         }
         if (streak >= 4)
@@ -215,31 +256,7 @@ public class Manager : MonoBehaviour
             Win(name);
             return;
         }
-
-        //for (int y = 0; y < h; y++)
-        //{
-        //    for (int x = 0; x < w - 3; x++)
-        //    {
-        //        switch (grid[x, y])
-        //        {
-        //            case SlotState.Empty:
-        //                streak = 0;
-        //                break;
-        //            case SlotState.Red:
-        //                streak = name.Contains("Red") ? streak + 1 : 0;
-        //                break;
-        //            case SlotState.Yellow:
-        //                streak = name.Contains("Yellow") ? streak + 1 : 0;
-        //                break;
-        //        }
-        //        if (streak >= 4)
-        //        {
-        //            Win(name);
-        //            gameOver = true;
-        //            return;
-        //        }
-        //    }
-        //}
+        //Così non funziona, al posto di continue/break mettere streak = 0-----FATTO
 
         //Se arrivi qui, significa che il verticale e l'orizzontale non hanno trovato nulla
         //Obliquo a destra
