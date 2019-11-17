@@ -20,6 +20,7 @@ public class Manager : MonoBehaviour
     private int turn;
     [HideInInspector]
     public bool busy;
+    [HideInInspector]
     public bool gameOver;
 
     void Start()
@@ -48,7 +49,7 @@ public class Manager : MonoBehaviour
             GenerateCoin(6);
     }
 
-    private List<int> GenerateMask()
+    private int[] GenerateMask()
     {
         List<int> mask = new List<int>();
         for (int i = 0; i < 7; i++)
@@ -59,9 +60,10 @@ public class Manager : MonoBehaviour
                 x = Random.Range(0, 7);
             }
             while (mask.Contains(x));
-            mask[i] = x;
+            mask.Add(x);
+            Debug.Log(mask[i]);
         }
-        return mask;
+        return mask.ToArray();
     }
 
     public void GenerateCoin(int index)
@@ -95,7 +97,7 @@ public class Manager : MonoBehaviour
         }
 
         //Inserimento, oltre che nella scena, nell'array
-        Instantiate(g, new Vector3(columnsX[index], 4.5f, 0), Quaternion.identity);
+        Instantiate(g, new Vector3(columnsX[index], 7/*4.5f*/, 0), Quaternion.Euler(90, 0, 0)/*Quaternion.identity*/);
         
         int y = 0;
         for (int i = 0; i < 6; i++)
@@ -138,133 +140,35 @@ public class Manager : MonoBehaviour
 
     public void CheckMove(string name, Vector2Int pos)
     {
-        Debug.Log(pos);
+        //Debug.Log(pos);
         int streak = 0;
         //Verticale
-        //for (int x = 0; x < w; x++)
-        //{
-        //    for (int y = 0; y < h - 3; y++)
-        //    {
-        //        switch (grid[x, y])
-        //        {
-        //            case SlotState.Empty:
-        //                streak = 0;
-        //                break;
-        //            case SlotState.Red:
-        //                streak = name.Contains("Red") ? streak + 1 : 0;
-        //                break;
-        //            case SlotState.Yellow:
-        //                streak = name.Contains("Yellow") ? streak + 1 : 0;
-        //                break;
-        //        }
-        //        if (streak >= 4)
-        //        {
-        //            Win(name);
-        //            gameOver = true;
-        //            return;
-        //        }
-        //    }
-        //}
-
-        //Se arrivi qui, significa che il verticale non ha trovato nulla
-        //Orizzontale
-        //streak = 1;
-        //for (int i = 1; i <= 3; i++)
-        //{
-        //    if (streak >= 4)
-        //        break;
-        //    try
-        //    {
-        //        if (grid[pos.x - i, pos.y] == SlotState.Empty)
-        //        {
-        //            break;
-        //        }
-        //        else if (grid[pos.x - i, pos.y] == SlotState.Red)
-        //        {
-        //            if (name.Contains("Red"))
-        //                streak++;
-        //            else
-        //                break;
-        //        }
-        //        else
-        //        {
-        //            if (name.Contains("Yellow"))
-        //                streak++;
-        //            else
-        //                break;
-        //        }
-        //    }
-        //    catch (System.IndexOutOfRangeException)
-        //    {
-        //        break;
-        //    }
-        //}
-        //for (int i = 1; i <= 3; i++)
-        //{
-        //    if (streak >= 4)
-        //        break;
-        //    try
-        //    {
-        //        if (grid[pos.x + i, pos.y] == SlotState.Empty)
-        //        {
-        //            break;
-        //        }
-        //        else if (grid[pos.x + i, pos.y] == SlotState.Red)
-        //        {
-        //            if (name.Contains("Red"))
-        //                streak++;
-        //            else
-        //                break;
-        //        }
-        //        else
-        //        {
-        //            if (name.Contains("Yellow"))
-        //                streak++;
-        //            else
-        //                break;
-        //        }
-        //    }
-        //    catch (System.IndexOutOfRangeException)
-        //    {
-        //        break;
-        //    }
-        //}
-        //if (streak >= 4)
-        //{
-        //    Win(name);
-        //    return;
-        //}
-
-        //Nuovo metodo più compatto
-        streak = 0;
         for (int i = -3; i <= 3; i++)
         {
             if (streak >= 4)
                 break;
-            try
-            {
-                if (grid[pos.x + i, pos.y] == SlotState.Empty)
-                {
-                    streak = 0;
-                }
-                else if (grid[pos.x + i, pos.y] == SlotState.Red)
-                {
-                    if (name.Contains("Red"))
-                        streak++;
-                    else
-                        streak = 0;
-                }
-                else
-                {
-                    if (name.Contains("Yellow"))
-                        streak++;
-                    else
-                        streak = 0;
-                }
-            }
-            catch (System.IndexOutOfRangeException)
+
+            if (pos.y + i < 0 || pos.y + i >= h)
             {
                 streak = 0;
+            }
+            else if (grid[pos.x, pos.y + i] == SlotState.Empty)
+            {
+                streak = 0;
+            }
+            else if (grid[pos.x, pos.y + i] == SlotState.Red)
+            {
+                if (name.Contains("Red"))
+                    streak++;
+                else
+                    streak = 0;
+            }
+            else if (grid[pos.x, pos.y + i] == SlotState.Yellow)
+            {
+                if (name.Contains("Yellow"))
+                    streak++;
+                else
+                    streak = 0;
             }
         }
         if (streak >= 4)
@@ -272,69 +176,118 @@ public class Manager : MonoBehaviour
             Win(name);
             return;
         }
-        //Così non funziona, al posto di continue/break mettere streak = 0-----FATTO
+
+        //Se arrivi qui, significa che il verticale non ha trovato nulla
+        //Orizzontale
+        streak = 0;
+        for (int i = -3; i <= 3; i++)
+        {
+            if (streak >= 4)
+                break;
+
+            if (pos.x + i < 0 || pos.x + i >= w)
+            {
+                streak = 0;
+            }
+            else if (grid[pos.x + i, pos.y] == SlotState.Empty)
+            {
+                streak = 0;
+            }
+            else if (grid[pos.x + i, pos.y] == SlotState.Red)
+            {
+                if (name.Contains("Red"))
+                    streak++;
+                else
+                    streak = 0;
+            }
+            else if (grid[pos.x + i, pos.y] == SlotState.Yellow)
+            {
+                if (name.Contains("Yellow"))
+                    streak++;
+                else
+                    streak = 0;
+            }
+        }
+        if (streak >= 4)
+        {
+            Win(name);
+            return;
+        }
 
         //Se arrivi qui, significa che il verticale e l'orizzontale non hanno trovato nulla
         //Obliquo a destra
-        //streak = 0;
-        //for (int x = 0; x < w - 3; x++)
-        //{
-        //    for (int y = 0; y < h - 3; y++)
-        //    {
-        //        for (int i = 0; i < 4; i++)
-        //        {
-        //            switch (grid[x + i, y + i])
-        //            {
-        //                case SlotState.Empty:
-        //                    streak = 0;
-        //                    break;
-        //                case SlotState.Red:
-        //                    streak = name.Contains("Red") ? streak + 1 : 0;
-        //                    break;
-        //                case SlotState.Yellow:
-        //                    streak = name.Contains("Yellow") ? streak + 1 : 0;
-        //                    break;
-        //            }
-        //        }
-        //        if (streak >= 4)
-        //        {
-        //            Win(name);
-        //            gameOver = true;
-        //            return;
-        //        }
-        //    }
-        //}
+        streak = 0;
+        for (int i = -3; i <= 3; i++)
+        {
+            if (streak >= 4)
+                break;
 
-        ////Se arrivi qui, significa che il verticale, l'orizzontale e l'obliquo a destra non hanno trovato nulla
-        ////Obliquo a sinistra
-        //streak = 0;
-        //for (int x = 3; x < w; x++)
-        //{
-        //    for (int y = 0; y < h - 3; y++)
-        //    {
-        //        for (int i = 0; i < 4; i++)
-        //        {
-        //            switch (grid[x - i, y + i])
-        //            {
-        //                case SlotState.Empty:
-        //                    streak = 0;
-        //                    break;
-        //                case SlotState.Red:
-        //                    streak = name.Contains("Red") ? streak + 1 : 0;
-        //                    break;
-        //                case SlotState.Yellow:
-        //                    streak = name.Contains("Yellow") ? streak + 1 : 0;
-        //                    break;
-        //            }
-        //        }
-        //        if (streak >= 4)
-        //        {
-        //            Win(name);
-        //            gameOver = true;
-        //            return;
-        //        }
-        //    }
-        //}
+            //Debug.Log("X=" + pos.x + " Y=" + pos.y + " I=" + i);
+            if (pos.x + i < 0 || pos.x + i >= w || pos.y + i < 0 || pos.y + i >= h)
+            {
+                streak = 0;
+            }
+            else if (grid[pos.x + i, pos.y + i] == SlotState.Empty)
+            {
+                streak = 0;
+            }
+            else if (grid[pos.x + i, pos.y + i] == SlotState.Red)
+            {
+                if (name.Contains("Red"))
+                    streak++;
+                else
+                    streak = 0;
+            }
+            else if (grid[pos.x + i, pos.y + i] == SlotState.Yellow)
+            {
+                if (name.Contains("Yellow"))
+                    streak++;
+                else
+                    streak = 0;
+            }
+        }
+        if (streak >= 4)
+        {
+            Win(name);
+            return;
+        }
+
+        //Se arrivi qui, significa che il verticale, l'orizzontale e l'obliquo a destra non hanno trovato nulla
+        //Obliquo a sinistra
+        streak = 0;
+        for (int i = -3; i <= 3; i++)
+        {
+            if (streak >= 4)
+                break;
+
+            if (pos.x + i < 0 || pos.x + i >= w || pos.y - i < 0 || pos.y - i >= h)
+            {
+                streak = 0;
+            }
+            else if (grid[pos.x + i, pos.y - i] == SlotState.Empty)
+            {
+                streak = 0;
+            }
+            else if (grid[pos.x + i, pos.y - i] == SlotState.Red)
+            {
+                if (name.Contains("Red"))
+                    streak++;
+                else
+                    streak = 0;
+            }
+            else if (grid[pos.x + i, pos.y - i] == SlotState.Yellow)
+            {
+                if (name.Contains("Yellow"))
+                    streak++;
+                else
+                    streak = 0;
+            }
+        }
+        if (streak >= 4)
+        {
+            Win(name);
+            return;
+        }
     }
 
     private void Win(string name)

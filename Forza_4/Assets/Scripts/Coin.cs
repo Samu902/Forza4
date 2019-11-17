@@ -24,4 +24,13 @@ public class Coin : MonoBehaviour
         man.CheckMove(gameObject.name, man.PosInGrid(gameObject));
         man.busy = false;
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        //Debug.Log("OK");
+        if (man.gameOver)
+            return;
+        man.CheckMove(gameObject.name, man.PosInGrid(gameObject));
+        man.busy = false;
+    }
 }
