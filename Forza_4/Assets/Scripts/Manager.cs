@@ -97,7 +97,7 @@ public class Manager : MonoBehaviour
         }
 
         //Inserimento, oltre che nella scena, nell'array
-        Instantiate(g, new Vector3(columnsX[index], 7/*4.5f*/, 0), Quaternion.Euler(90, 0, 0)/*Quaternion.identity*/);
+        Instantiate(g, new Vector3(columnsX[index], 7/*4.5f*/, 0), Quaternion.Euler(0, 0, 0)/*Quaternion.identity*/);
         
         int y = 0;
         for (int i = 0; i < 6; i++)
