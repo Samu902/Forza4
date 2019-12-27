@@ -12,6 +12,11 @@ public class Manager : MonoBehaviour
     public GameObject redC;
     public GameObject yellowC;
 
+    public GameObject redLight;
+    public GameObject yellowLight;
+
+    public GameObject resetButton;
+
     public float[] columnsX;
     private int w = 7;
     private int h = 6;
@@ -34,36 +39,54 @@ public class Manager : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            GenerateCoin(0);
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-            GenerateCoin(1);
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-            GenerateCoin(2);
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
-            GenerateCoin(3);
-        else if (Input.GetKeyDown(KeyCode.Alpha5))
-            GenerateCoin(4);
-        else if (Input.GetKeyDown(KeyCode.Alpha6))
-            GenerateCoin(5);
-        else if (Input.GetKeyDown(KeyCode.Alpha7))
-            GenerateCoin(6);
-    }
-
-    private int[] GenerateMask()
-    {
-        List<int> mask = new List<int>();
-        for (int i = 0; i < 7; i++)
         {
-            int x;
-            do
-            {
-                x = Random.Range(0, 7);
-            }
-            while (mask.Contains(x));
-            mask.Add(x);
-            Debug.Log(mask[i]);
+            if (turn % 2 == 1)
+                GenerateCoin(0);
+            else
+                GenerateCoin(6);
         }
-        return mask.ToArray();
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            if (turn % 2 == 1)
+                GenerateCoin(1);
+            else
+                GenerateCoin(5);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            if (turn % 2 == 1)
+                GenerateCoin(2);
+            else
+                GenerateCoin(4);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            if (turn % 2 == 1)
+                GenerateCoin(3);
+            else
+                GenerateCoin(3);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            if (turn % 2 == 1)
+                GenerateCoin(4);
+            else
+                GenerateCoin(2);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            if (turn % 2 == 1)
+                GenerateCoin(5);
+            else
+                GenerateCoin(1);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha7))
+        {
+            if (turn % 2 == 1)
+                GenerateCoin(6);
+            else
+                GenerateCoin(0);
+        }
     }
 
     public void GenerateCoin(int index)
@@ -292,6 +315,17 @@ public class Manager : MonoBehaviour
 
     private void Win(string name)
     {
-        Debug.Log(name + " wins");
+        if(name.Contains("Red"))
+        {
+            //Accendi luce rossa
+            redLight.GetComponent<Renderer>().material.color = Color.red;
+        }
+        else if(name.Contains("Yellow"))
+        {
+            //Accendi luce gialla
+            yellowLight.GetComponent<Renderer>().material.color = Color.yellow;
+        }
+        resetButton.GetComponent<Renderer>().material.color = Color.green;
+        gameOver = true;
     }
 }
