@@ -2245,6 +2245,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 729d2e2595170e041a48f6e304d90be6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  turnTime: 30
+  currentTime: 0
+  stopTime: 0
 --- !u!1 &934463557
 GameObject:
   m_ObjectHideFlags: 0
@@ -4944,6 +4947,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turnRate: 90
+  isMoving: 0
 --- !u!1001 &1713169930
 PrefabInstance:
   m_ObjectHideFlags: 0

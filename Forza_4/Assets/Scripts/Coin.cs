@@ -6,6 +6,7 @@ public class Coin : MonoBehaviour
 {
     private Manager man;
     private CameraMove camMove;
+    private Crono crono;
     private bool hasAlreadyFallen;
 
     void Start()
@@ -13,6 +14,8 @@ public class Coin : MonoBehaviour
         man = GameObject.Find("Manager").GetComponent<Manager>();
         camMove = Camera.main.gameObject.GetComponent<CameraMove>();
         hasAlreadyFallen = false;
+        crono = GameObject.Find("Crono").GetComponent<Crono>();
+        crono.stopTime = true;
     }
 
     void Update()

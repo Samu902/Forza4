@@ -89,15 +89,17 @@ public class Manager : MonoBehaviour
         }
     }
 
-    public void GenerateCoin(int index)
+    public int GenerateCoin(int index)
     {
+        //-1=busy; 0:colonna piena; 1: tutto ok
+
         //Se la moneta non ha ancora finito di cadere, esci
         if (busy)
-            return;
+            return -1;
 
         //Se la colonna è piena, esci
         if (grid[index, h - 1] != SlotState.Empty)
-            return;
+            return 0;
 
         //Occupato ON
         busy = true;
@@ -132,6 +134,8 @@ public class Manager : MonoBehaviour
             }
         }
         grid[index, y] = state;
+
+        return 1;
     }
 
     public Vector2Int PosInGrid(GameObject g)
@@ -319,11 +323,13 @@ public class Manager : MonoBehaviour
         {
             //Accendi luce rossa
             redLight.GetComponent<Renderer>().material.color = Color.red;
+            redLight.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(0.2f, 0, 0));
         }
         else if(name.Contains("Yellow"))
         {
             //Accendi luce gialla
             yellowLight.GetComponent<Renderer>().material.color = Color.yellow;
+            yellowLight.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(0.4f, 0.3681275f, 0));
         }
         resetButton.GetComponent<Renderer>().material.color = Color.green;
         gameOver = true;
