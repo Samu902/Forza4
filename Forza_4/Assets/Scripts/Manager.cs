@@ -22,7 +22,8 @@ public class Manager : MonoBehaviour
     private int h = 6;
     private SlotState[,] grid;
 
-    private int turn;
+    [HideInInspector]
+    public int turn;
     [HideInInspector]
     public bool busy;
     [HideInInspector]
@@ -317,7 +318,7 @@ public class Manager : MonoBehaviour
         }
     }
 
-    private void Win(string name)
+    public void Win(string name)
     {
         if(name.Contains("Red"))
         {

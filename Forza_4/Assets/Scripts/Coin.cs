@@ -37,6 +37,9 @@ public class Coin : MonoBehaviour
         if (hasAlreadyFallen)
             return;
 
+        if (man.turn >= 42)
+            man.Win("Ciao");
+
         hasAlreadyFallen = true;
         man.CheckMove(gameObject.name, man.PosInGrid(gameObject));
 
